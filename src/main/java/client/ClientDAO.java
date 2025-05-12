@@ -21,7 +21,7 @@ public class ClientDAO {
         this.getAllSt = connection.prepareStatement("SELECT id, name FROM client");
     }
 
-    public long create(String name) throws SQLException {
+    public Client create(String name) throws SQLException {
         createSt.setString(1, name);
 
         int affectedRows = createSt.executeUpdate();
@@ -31,7 +31,7 @@ public class ClientDAO {
 
         try (ResultSet gk = createSt.getGeneratedKeys()) {
             if (gk.next()) {
-                return gk.getLong("id");
+                return new Client(gk.getLong("id"), name);
             } else {
                 throw new SQLException("Creating client failed!");
             }
@@ -65,7 +65,7 @@ public class ClientDAO {
         if (affectedRows == 0) {
             throw new SQLException("Creating client failed, no rows affected.");
         }
-        return get(id);
+        return new Client(id,name);
     }
 
     public Client deleteById(long id) throws SQLException {

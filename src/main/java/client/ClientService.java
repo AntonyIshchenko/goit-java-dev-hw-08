@@ -38,7 +38,7 @@ public class ClientService {
         checkName(name);
 
         try {
-            return dao.create(name.trim());
+            return dao.create(name.trim()).getId();
         } catch (SQLException e) {
             throw new SQLException("Client creating failed!");
         }
