@@ -1,4 +1,4 @@
-import Client.ClientService;
+import client.ClientService;
 import storage.Database;
 import storage.DatabaseInitService;
 
@@ -13,6 +13,25 @@ public class App {
 
         ClientService clientService = new ClientService(connection);
 
-        System.out.println("App successfully initialized");
+        try {
+            System.out.println("Get all clients: " + clientService.listAll().toString());
+
+            long newId = clientService.create("test1");
+            System.out.println("Create new client name \"test1\" received id: " + newId);
+
+            System.out.println("Create new client name \"test2\" received id: " + clientService.create("test2"));
+
+            System.out.println("Get client with id=3 : " + clientService.getById(3));
+
+            System.out.print("Set client with id=6 name \"Mega Test\" : ");
+            clientService.setName(6, "Mega Test");
+
+            System.out.print("Delete client with id=" + newId + " :");
+            clientService.deletedById(newId);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }
