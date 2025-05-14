@@ -1,18 +1,16 @@
 package client;
 
+import interfaces.EntityDAO;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
 public class ClientService {
-    private ClientDAO dao;
+    private final EntityDAO<Client> dao;
 
-    public ClientService(Connection connection) {
-        try {
-            this.dao = new ClientDAO(connection);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public ClientService(EntityDAO<Client> dao) {
+        this.dao = dao;
     }
 
     private void checkName(String name) throws IllegalArgumentException{
@@ -38,7 +36,8 @@ public class ClientService {
         checkName(name);
 
         try {
-            return dao.create(name.trim()).getId();
+            Client client= new Client(0, name.trim());
+            return dao.create(client).getId();
         } catch (SQLException e) {
             throw new SQLException("Client creating failed!");
         }
@@ -59,7 +58,8 @@ public class ClientService {
         checkName(name);
         checkId(id);
 
-        Client updatedClient = dao.update(id, name.trim());
+        Client client= new Client(id, name.trim());
+        Client updatedClient = dao.update(client);
         System.out.println(updatedClient.toString());
     }
 

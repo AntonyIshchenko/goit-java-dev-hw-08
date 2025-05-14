@@ -1,18 +1,24 @@
+import client.Client;
+import client.ClientDAO;
 import client.ClientService;
+import interfaces.EntityDAO;
 import storage.Database;
 import storage.DatabaseInitService;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 public class App {
     public static void main(String[] args) {
-
         Connection connection = Database.getINSTANCE().getConnection();
 
         DatabaseInitService.initialize();
 
-        ClientService clientService = new ClientService(connection);
+        EntityDAO<Client> clientDAO = new ClientDAO(connection);
 
+        ClientService clientService = new ClientService(clientDAO);
+
+        // For demonstration
         try {
             System.out.println("Get all clients: " + clientService.listAll().toString());
 
@@ -29,9 +35,8 @@ public class App {
             System.out.print("Delete client with id=" + newId + " :");
             clientService.deletedById(newId);
 
-        } catch (Exception e) {
+        } catch (SQLException | IllegalArgumentException e) {
             e.printStackTrace();
         }
-
     }
 }
